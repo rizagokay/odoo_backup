@@ -29,8 +29,7 @@ class BackupConfiguration(models.Model):
         with open(file_path, "wb") as fp:
             odoo.service.db.dump_db(self.env.cr.dbname, fp, self.backup_type)
 
-        with open(file_path, "rb") as rf:
-            readable_size = backup_env._convert_size(len(rf.read()))
+        readable_size = backup_env._convert_size(os.path.getsize(file_path))
 
         rec = backup_env.sudo().create({"name": name, "configuration_id": self.id, "file_path": file_path, "file_name": bkp_file, "size": readable_size})
         return rec
